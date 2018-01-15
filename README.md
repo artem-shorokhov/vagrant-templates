@@ -1,6 +1,6 @@
 # Simple Vagrant Templates
 
-# Folder content Description
+## Folder content Description
 
 - `centos-7.4` - default `bento/centos-7.4` box
 - `centos-ubuntu` - two hosts template
