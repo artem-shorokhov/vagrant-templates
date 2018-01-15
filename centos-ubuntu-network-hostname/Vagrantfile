@@ -1,15 +1,24 @@
 Vagrant.configure("2") do |config|
 
-  config.vm.define "server" do |server|
-    server.vm.box = "bento/ubuntu-16.04"
-    server.vm.network "public_network"
-    server.vm.hostname = "server"
-  end
-
-  config.vm.define "host" do |host|
-    host.vm.box = "bento/centos-7.4"
-    host.vm.network "public_network"
-    host.vm.hostname = "host"
+  HOSTS = [
+    { :box => "bento/ubuntu-16.04", :hostname => "ubuntu", :ip => "192.168.68.10" },
+	{ :box => "bento/centos-7.4", :hostname => "centos", :ip => "192.168.68.11" }
+  ]
+  
+  # Set up hosts(s).
+  HOSTS.each do |host|
+    config.vm.define host[:hostname] do |box|
+      box.vm.box = host[:box]
+      box.vm.hostname = host[:hostname]
+      box.vm.network "private_network", ip: host[:ip]
+	  
+	  # populate /etc/hosts with hostnames
+	  HOSTS.each do |record|
+	    if (record[:hostname] != host[:hostname])
+		  box.vm.provision "shell", inline: "echo #{record[:ip]} #{record[:hostname]} >> /etc/hosts"
+		end
+	  end
+    end
   end
   
 end
