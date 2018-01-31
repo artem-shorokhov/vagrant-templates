@@ -1,0 +1,7 @@
+---
+- name: Set up MySQL server.
+  hosts: all
+  become: yes
+  
+  tasks:
+  - copy: content="Does it really work?\n" dest=/home/vagrant/test
